@@ -1,0 +1,5 @@
+runtime: nodejs16  # Usa nodejs18 si es compatible con tu código
+instance_class: F2  # Tamaño de instancia recomendado para Node.js
+
+env_variables:
+  NODE_ENV: production
