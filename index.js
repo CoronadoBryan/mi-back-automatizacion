@@ -2,7 +2,7 @@ const express = require("express");
 const { Builder, By, until } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
@@ -12,9 +12,14 @@ app.post("/api/process", async (req, res) => {
     return res.status(400).send("URL no proporcionada o no válida");
   }
 
-  // Configuración de Chrome sin carpeta de descargas para simplificar la prueba
+  // Configuración de Chrome en modo headless para entornos de servidor
   const options = new chrome.Options();
-  options.addArguments("--start-maximized");
+  options.addArguments("--headless"); // Ejecuta Chrome sin interfaz gráfica
+  options.addArguments("--no-sandbox"); // Evita problemas de permisos en entornos de servidor
+  options.addArguments("--disable-dev-shm-usage"); // Usa /tmp en vez de /dev/shm
+  options.addArguments("--disable-gpu"); // Desactiva la GPU (opcional)
+  options.addArguments("--disable-software-rasterizer"); // Previene problemas en Render
+  options.addArguments("--remote-debugging-port=9222"); // Puerto para depuración
 
   try {
     const driver = await new Builder()
